@@ -20,7 +20,7 @@ export class MovieController {
 	}
 
 	@Get(":id")
-	findOne(@Param("id") id: number) {
+	findOne(@Param("id") id: string) {
 		return this.movieService.findById(id);
 	}
 
@@ -30,12 +30,12 @@ export class MovieController {
 	}
 
 	@Put(":id")
-	update(@Param("id") id: number, @Body() dto: MovieDto) {
+	update(@Param("id") id: string, @Body() dto: MovieDto) {
 		return this.movieService.update(id, dto);
 	}
 
 	@Delete(":id")
-	delete(@Param("id") id: number) {
+	delete(@Param("id") id: string) {
 		return this.movieService.delete(id);
 	}
 }
