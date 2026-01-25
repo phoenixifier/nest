@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -19,10 +18,15 @@ model Movie {
   genre Genre @default(ACTION)
 
   reviews Review[] @relation("movie_reviews")
+  actors MoviesActors[]
+
+  poster Poster @relation(fields: [posterId], references: [id])
+  posterId String @unique @map("poster_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([releaseYear, title])
   @@map("movies")
 }
 
@@ -38,6 +42,39 @@ model Review {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("reviews")
+}
+
+model Actor {
+  id String @id @default(uuid())
+  name String
+  movies MoviesActors[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("actors")
+}
+
+model Poster {
+  id String @id @default(uuid())
+  imageUrl String @map("image_url")
+
+  movie Movie?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("posters")
+}
+
+model MoviesActors {
+  actor Actor @relation(fields: [actorId], references: [id])
+  actorId String @map("actor_id")
+  movie Movie @relation(fields: [movieId], references: [id])
+  movieId String @map("movie_id")
+
+  @@id([actorId, movieId])
+  @@map("movies_actors")
 }
 
 enum Genre {
